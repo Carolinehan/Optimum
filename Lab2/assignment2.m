@@ -24,10 +24,10 @@ f_c=c;
 r=[];
 x_c=[];
 
-for i=0:1000
+for i=0:999
     c= 1000-i
     f = [zeros(1,m+1) c*ones(1,n)]';
-    options = optimoptions('quadprog','Display','Off','MaxIterations',50);
+    options = optimoptions('quadprog','Display','Off','MaxIterations',20);
     z = quadprog(H,f,A,B,[],[],[],[],[],options);
     w = z(1:m,:);
     b = z(m+1,:);
@@ -70,6 +70,7 @@ f_w
 f_b
 f_eps
 f_c
+f_result
 
 
 
