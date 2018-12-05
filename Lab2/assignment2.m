@@ -27,7 +27,7 @@ x_c=[];
 for i=0:999
     c= 1000-i
     f = [zeros(1,m+1) c*ones(1,n)]';
-    options = optimoptions('quadprog','Display','Off','MaxIterations',20);
+    options = optimoptions('quadprog','Display','Off','MaxIterations',50);
     z = quadprog(H,f,A,B,[],[],[],[],[],options);
     w = z(1:m,:);
     b = z(m+1,:);
@@ -52,10 +52,10 @@ sense_count=0;
 spec_count=0;
 for t=501:569
    r = f_w'*(data(t,3:32))'+f_b;
-   if r >1
+   if r >=0
        y = 1;
        sense_count = sense_count+1;
-   elseif r<-1
+   else
        y = -1;
        spec_count =spec_count+1;
    end
