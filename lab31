@@ -1,0 +1,27 @@
+f = [10 0 20 11 12 7 9 20 0 14 16 18];
+
+A = [1 1 1 1 0 0 0 0 0 0 0 0
+     0 0 0 0 1 1 1 1 0 0 0 0
+     0 0 0 0 0 0 0 0 1 1 1 1];
+b = [25 55 35];
+Aeq = [1 0 0 0 1 0 0 0 1 0 0 0
+       0 1 0 0 0 1 0 0 0 1 0 0
+       0 0 1 0 0 0 1 0 0 0 1 0
+       0 0 0 1 0 0 0 1 0 0 0 1];
+beq = [15 45 30 25];
+lb = [0 0 0 0 0 0 0 0 0 0 0 0];
+options1 = optimoptions('linprog','Algorithm','dual-simplex');
+x1 = linprog(f, A, b, Aeq, beq, lb, [], options1)
+f1 = f * x1
+
+options2 = optimoptions('linprog','Algorithm','interior-point');
+x2 = linprog(f, A, b, Aeq, beq, lb, [], options2)
+f2 = f * x2
+
+b2 = [25 60 35];
+options3 = optimoptions('linprog','Algorithm','dual-simplex');
+x3 = linprog(f, A, b2, Aeq, beq, lb, [], options3)
+f3 = f * x3
+options4 = optimoptions('linprog','Algorithm','interior-point');
+x4 = linprog(f, A, b2, Aeq, beq, lb, [], options4)
+f4 = f * x4
