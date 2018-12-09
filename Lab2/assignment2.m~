@@ -9,62 +9,67 @@ c=1000;
 stop=0;
 H = diag([ones(1, m), zeros(1, n + 1)]);
 p = diag(y) * x;
-A = -[p y eye(n)];
-B = -ones(n,1);
-lb = [-inf * ones(m+1,1) ;zeros(n,1)];
+A = -[p y eye(n);zeros(n,m) zeros(n,1),eye(n)];
+B = -[ones(n,1);zeros(n,1)];
+%lb = [-inf * ones(m+1,1) ;zeros(n,1)];
 min=0;
 
-f_result=0;
+
+
+f_result=-1;
 f_w=0;
 f_b=0;
 f_eps=0;
-while stop==0    
+f_c=c;
+r=[];
+x_c=[];
+
+for i=0:999
+    c= 1000-i
     f = [zeros(1,m+1) c*ones(1,n)]';
-    z = quadprog(H,f,A,B,[],[],lb);
+    options = optimoptions('quadprog','Display','Off','MaxIterations',400);
+    z = quadprog(H,f,A,B,[],[],[],[],[],options);
     w = z(1:m,:);
-    b = z(m+1:m+1,:);
+    b = z(m+1,:);
     eps = z(m+2:m+n+1,:);
-    result = (1/2)*(w'*w)+c*sum(eps,'all')
-    if f_result > result
+    result = (1/2)*(w'*w)+c*sum(eps,'all');
+    r=[r;result];
+    x_c=[x_c;c];
+    if f_result==-1 || f_result > result
         f_result=result;
         f_w=w;
         f_b=b;
         f_eps=eps;
-    end
-    c=c-1;
-    if c==0
-        stop = 1;
+        f_c = c;
     end
     
-    acc_count = 0;
-    sense_count=0;
-    spec_count=0;
-    high_acc=0;
-    f_sense=0;
-    f_spec=0;
-   
 end
 
-for i=501:569
-        
-       r = f_w'*(data(i,3:32))'+f_b;
-       if r >0
-           y = 1;
-           sense_count = sense_count+1;
-       else
-           y = -1;
-           spec_count =spec_count+1;
-       end
-       
-       if y==data(i,2)
-           acc_count = acc_count+1;
-       end
-    end
-    
-    acc = acc_count/69
-    sense= sense_count/69;
-    spec=spec_count/69;
+plot(x_c,r);
 
-x=high_acc
+acc_count=0;
+sense_count=0;
+spec_count=0;
+for t=501:569
+   r = f_w'*(data(t,3:32))'+f_b;
+   if r >1
+       y = 1;
+       sense_count = sense_count+1;
+   elseif r<-1
+       y = -1;
+       spec_count =spec_count+1;
+   end
+   if y==data(t,2)
+       acc_count = acc_count+1;
+   end
+end
+acc = acc_count/69
+sense= sense_count/69
+spec=spec_count/69
+f_w
+f_b
+f_eps
+f_c
+
 
 

@@ -14,6 +14,8 @@ B = -[ones(n,1);zeros(n,1)];
 %lb = [-inf * ones(m+1,1) ;zeros(n,1)];
 min=0;
 
+
+
 f_result=-1;
 f_w=0;
 f_b=0;
@@ -22,7 +24,7 @@ f_c=c;
 r=[];
 x_c=[];
 
-for i=0:1000
+for i=0:999
     c= 1000-i
     f = [zeros(1,m+1) c*ones(1,n)]';
     options = optimoptions('quadprog','Display','Off','MaxIterations',50);
@@ -41,21 +43,23 @@ for i=0:1000
         f_c = c;
     end
     
-    if c==0
-        stop = 1;
-    end
 end
+
 plot(x_c,r);
-for i=501:569
-   r = f_w'*(data(i,3:32))'+f_b;
-   if r >1
+
+acc_count=0;
+sense_count=0;
+spec_count=0;
+for t=501:569
+   r = f_w'*(data(t,3:32))'+f_b;
+   if r >=0
        y = 1;
        sense_count = sense_count+1;
-   elif r<-1
+   else
        y = -1;
        spec_count =spec_count+1;
    end
-   if y==data(i,2)
+   if y==data(t,2)
        acc_count = acc_count+1;
    end
 end
@@ -66,6 +70,7 @@ f_w
 f_b
 f_eps
 f_c
+f_result
 
 
 
