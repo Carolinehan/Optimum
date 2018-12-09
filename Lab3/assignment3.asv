@@ -1,0 +1,25 @@
+c=[10 0 20 11 12 7 9 20 0 14 16 18];
+s=3;
+d=4;
+
+f=c;
+
+Aeq=zeros(7,12);
+for i=1:s
+    for j=1:d
+        Aeq(i,((i-1)*4)+j)=1;
+    end
+end
+
+for j=1:d
+    for i=1:s
+        Aeq(i+s,((i-1)*4)+j)=1;
+    end
+end
+
+Beq=[25 55 35 15 45 30 25];
+A=-eye(12,12);
+b=zeros(1,12);
+
+options = optimoptions('linprog','Algorithm','interior-point','Display','iter');
+x=linprog(f,A,b,Aeq,Beq)
