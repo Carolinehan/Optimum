@@ -42,10 +42,10 @@ b_2=[b 25 60 35];
 Beq_2=[15 45 30 25];
 
 interior_options = optimoptions('linprog','Algorithm','interior-point','Display','iter');
-x_interior=linprog(f,A_2,b_2,Aeq_2,Beq_2,[],[],interior_options)
+x_interior=linprog(f,A_2,b_2,Aeq_2,Beq_2,lb,[],interior_options)
 inter_result_4=f*x_interior
 simplex_options = optimoptions('linprog','Algorithm','dual-simplex','Display','iter');
-x_simplex=linprog(f,A_2,b_2,Aeq_2,Beq_2,[],[],simplex_options)
+x_simplex=linprog(f,A_2,b_2,Aeq_2,Beq_2,lb,[],simplex_options)
 simplex_result_4=f*x_simplex
 
 
